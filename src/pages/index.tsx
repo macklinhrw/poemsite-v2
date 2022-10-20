@@ -3,13 +3,12 @@ import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import Image from "next/image";
-import * as AspectRatio from "@radix-ui/react-aspect-ratio";
 
 const Home: NextPage = () => {
   const poems = trpc.poem.getAll.useQuery();
 
   return (
-    <div className="bg-gray-900">
+    <div className="bg-gray-800">
       <Head>
         <title>Hunter Reeve</title>
         <meta name="description" content="Hunter Reeve's Poetry" />
@@ -17,15 +16,15 @@ const Home: NextPage = () => {
       </Head>
       <main className="mx-auto min-h-screen flex-col p-4 text-gray-200">
         <AuthShowcase />
-        <div className="mx-auto grid max-w-lg gap-5 lg:max-w-none lg:grid-cols-3">
+        <div className="mx-auto grid max-w-lg gap-5 lg:max-w-7xl lg:grid-cols-3">
           {poems.data &&
             poems.data.map((poem) => {
               return (
                 <div
                   key={poem.slug}
-                  className="mt-2 flex flex-col overflow-hidden rounded-lg shadow-lg"
+                  className="mt-2 flex flex-col overflow-hidden rounded-lg bg-gray-700 shadow-lg"
                 >
-                  <div className="relative h-48 flex-shrink-0">
+                  <div className="relative h-72 flex-shrink-0">
                     <Image
                       layout="fill"
                       objectFit="cover"
@@ -33,7 +32,9 @@ const Home: NextPage = () => {
                       alt=""
                     />
                   </div>
-                  <p>{poem.title}</p>
+                  <div className="my-6 mx-2">
+                    <p>{poem.title}</p>
+                  </div>
                 </div>
               );
             })}
