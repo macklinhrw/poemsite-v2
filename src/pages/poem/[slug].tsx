@@ -69,10 +69,10 @@ const poemPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   );
 };
 
-export const getStaticProps: GetStaticProps<{ slug: string }> = async (
-  context: GetStaticPropsContext
-) => {
-  const slug: string = context.params?.slug as string;
+export async function getStaticProps(
+  context: GetStaticPropsContext<{ slug: string }>
+) {
+  const slug = context.params?.slug as string;
   if (!slug) return { notFound: true };
 
   const ssgHelper = createProxySSGHelpers({
@@ -93,12 +93,12 @@ export const getStaticProps: GetStaticProps<{ slug: string }> = async (
       trpcState: ssgHelper.dehydrate(),
       slug,
     },
-    revalidate: 1,
+    revalidate: 1600,
   };
-};
+}
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const poems = await prisma.poem.findMany();
+  const poems = await prisma.poem.findMany({ select: { slug: true } });
   if (!poems) return { paths: [{ params: {} }], fallback: false };
   const paths = poems.map((poem) => {
     return {
@@ -109,7 +109,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   });
   return {
     paths,
-    fallback: false,
+    fallback: "blocking",
   };
 };
 
