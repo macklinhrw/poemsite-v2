@@ -64,3 +64,15 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+model Poem {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String
+  imageLink String
+  content   String   @db.Text
+  hasTitle  Boolean
+  isDraft   Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

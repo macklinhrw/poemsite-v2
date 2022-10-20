@@ -17,6 +17,9 @@ export default defineNextConfig({
   reactStrictMode: true,
   swcMinify: true,
   // Next.js i18n docs: https://nextjs.org/docs/advanced-features/i18n-routing
+  images: {
+    domains: ["hunter-poem-images.s3.us-west-1.amazonaws.com"],
+  },
   i18n: {
     locales: ["en"],
     defaultLocale: "en",

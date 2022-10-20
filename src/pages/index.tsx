@@ -2,32 +2,50 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
+import Image from "next/image";
+import * as AspectRatio from "@radix-ui/react-aspect-ratio";
 
 const Home: NextPage = () => {
-  const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
+  const poems = trpc.poem.getAll.useQuery();
 
   return (
-    <>
+    <div className="bg-gray-900">
       <Head>
         <title>Hunter Reeve</title>
         <meta name="description" content="Hunter Reeve's Poetry" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="container mx-auto flex min-h-screen flex-col items-center justify-center p-4">
-        <div className="flex w-full items-center justify-center pt-6 text-2xl text-blue-500">
-          {hello.data ? <p>{hello.data.greeting}</p> : <p>Loading..</p>}
-        </div>
+      <main className="mx-auto min-h-screen flex-col p-4 text-gray-200">
         <AuthShowcase />
+        <div className="mx-auto grid max-w-lg gap-5 lg:max-w-none lg:grid-cols-3">
+          {poems.data &&
+            poems.data.map((poem) => {
+              return (
+                <div
+                  key={poem.slug}
+                  className="mt-2 flex flex-col overflow-hidden rounded-lg shadow-lg"
+                >
+                  <div className="relative h-48 flex-shrink-0">
+                    <Image
+                      layout="fill"
+                      objectFit="cover"
+                      src={poem.imageLink}
+                      alt=""
+                    />
+                  </div>
+                  <p>{poem.title}</p>
+                </div>
+              );
+            })}
+        </div>
       </main>
-    </>
+    </div>
   );
 };
 
 export default Home;
 
 const AuthShowcase: React.FC = () => {
-  const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery();
-
   const { data: sessionData } = useSession();
 
   return (
@@ -37,42 +55,12 @@ const AuthShowcase: React.FC = () => {
           Logged in as {sessionData?.user?.name}
         </p>
       )}
-      {secretMessage && (
-        <p className="text-2xl text-blue-500">{secretMessage}</p>
-      )}
       <button
-        className="rounded-md border border-black bg-violet-50 px-4 py-2 text-xl shadow-lg hover:bg-violet-100"
+        className="rounded-md border border-black bg-violet-900 px-4 py-2 text-xl shadow-lg hover:bg-violet-800"
         onClick={sessionData ? () => signOut() : () => signIn()}
       >
         {sessionData ? "Sign out" : "Sign in"}
       </button>
     </div>
-  );
-};
-
-type TechnologyCardProps = {
-  name: string;
-  description: string;
-  documentation: string;
-};
-
-const TechnologyCard = ({
-  name,
-  description,
-  documentation,
-}: TechnologyCardProps) => {
-  return (
-    <section className="flex flex-col justify-center rounded border-2 border-gray-500 p-6 shadow-xl duration-500 motion-safe:hover:scale-105">
-      <h2 className="text-lg text-gray-700">{name}</h2>
-      <p className="text-sm text-gray-600">{description}</p>
-      <a
-        className="m-auto mt-3 w-fit text-sm text-violet-500 underline decoration-dotted underline-offset-2"
-        href={documentation}
-        target="_blank"
-        rel="noreferrer"
-      >
-        Documentation
-      </a>
-    </section>
   );
 };
