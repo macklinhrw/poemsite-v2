@@ -4,7 +4,6 @@ import { appRouter } from "../../server/trpc/router/_app";
 import superjson from "superjson";
 import {
   GetStaticPaths,
-  GetStaticProps,
   GetStaticPropsContext,
   InferGetStaticPropsType,
 } from "next";
@@ -72,14 +71,13 @@ const poemPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 export async function getStaticProps(
   context: GetStaticPropsContext<{ slug: string }>
 ) {
-  const slug = context.params?.slug as string;
-  if (!slug) return { notFound: true };
-
   const ssgHelper = createProxySSGHelpers({
     router: appRouter,
     ctx: await createContextInner({ session: null }),
     transformer: superjson, // optional - adds superjson serialization
   });
+
+  const slug = context.params?.slug as string;
 
   const post = await ssgHelper.poem.getBySlug.fetch({ slug });
 
@@ -99,16 +97,13 @@ export async function getStaticProps(
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const poems = await prisma.poem.findMany({ select: { slug: true } });
-  if (!poems) return { paths: [{ params: {} }], fallback: false };
-  const paths = poems.map((poem) => {
-    return {
+
+  return {
+    paths: poems.map((poem) => ({
       params: {
         slug: poem.slug,
       },
-    };
-  });
-  return {
-    paths,
+    })),
     fallback: "blocking",
   };
 };
