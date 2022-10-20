@@ -47,7 +47,7 @@ const poemPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                     <hr className="my-2 h-px border-0 bg-gray-200/40" />
                   </div>
                 )}
-                <div className="text-lg leading-loose">
+                <div className="leading-loose lg:text-lg">
                   {poem.content.split("\n").map((line, id) => {
                     return (
                       <div key={`${id}-line`}>
