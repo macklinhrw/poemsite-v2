@@ -3,9 +3,12 @@ import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
   const poems = trpc.poem.getAll.useQuery();
+  const router = useRouter();
 
   return (
     <div className="bg-gray-800">
@@ -22,7 +25,8 @@ const Home: NextPage = () => {
               return (
                 <div
                   key={poem.slug}
-                  className="mt-2 flex flex-col overflow-hidden rounded-lg bg-gray-700 shadow-lg"
+                  className="group mt-2 flex flex-col overflow-hidden rounded-lg bg-gray-700 shadow-lg hover:cursor-pointer"
+                  onClick={() => router.push(`poem/${poem.slug}`)}
                 >
                   <div className="relative h-72 flex-shrink-0">
                     <Image
@@ -32,8 +36,25 @@ const Home: NextPage = () => {
                       alt=""
                     />
                   </div>
-                  <div className="my-6 mx-2">
-                    <p>{poem.title}</p>
+                  <div className="mx-2 mt-6 mb-4">
+                    {poem.hasTitle && (
+                      <>
+                        <p className="font-semibold">{poem.title}</p>
+                        <hr className="my-2 h-px border-0 bg-gray-200/40" />
+                      </>
+                    )}
+                    <div className="leading-relaxed line-clamp-3">
+                      {poem.content.split("\n").map((line, id) => {
+                        return (
+                          <div key={`${id}-line`}>
+                            <p className="font-serif">{line}</p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <button className="mt-2 group-hover:underline">
+                      <Link href={`poem/${poem.slug}`}>Read More...</Link>
+                    </button>
                   </div>
                 </div>
               );

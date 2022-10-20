@@ -9,14 +9,23 @@ export const poemRouter = router({
         greeting: `Hello ${input?.text ?? "world"}`,
       };
     }),
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.poem.findMany({ orderBy: {createdAt: 'desc'} });
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.poem.findMany({ orderBy: { createdAt: "desc" } });
   }),
+  getBySlug: publicProcedure
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.poem.findFirst({ where: { slug: input.slug } });
+    }),
   create: protectedProcedure
-    .input(z.object({
-      title: z.string().nullish(),
-    }).nullish())
+    .input(
+      z
+        .object({
+          title: z.string().nullish(),
+        })
+        .nullish()
+    )
     .mutation(({ ctx }) => {
-      return {}
-    })
+      return {};
+    }),
 });
