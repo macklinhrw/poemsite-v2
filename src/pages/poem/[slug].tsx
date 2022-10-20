@@ -27,7 +27,7 @@ const poemPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
             <Breadcrumbs.Item>{poem?.title}</Breadcrumbs.Item>
           </Breadcrumbs>
         </div>
-        <div className="mx-auto max-w-xl">
+        <div className="mx-auto max-w-xl overflow-hidden">
           {/* Poem Here */}
           {poem ? (
             <div>
@@ -40,7 +40,7 @@ const poemPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   alt=""
                 />
               </div>
-              <div className="mx-2 mt-6 mb-4">
+              <div className="mx-2 mt-6 mb-4 overflow-auto">
                 {poem.hasTitle && (
                   <div>
                     <p className="text-xl font-semibold">{poem.title}</p>
