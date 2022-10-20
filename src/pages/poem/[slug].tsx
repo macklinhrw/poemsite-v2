@@ -11,6 +11,7 @@ import {
 import { trpc } from "../../utils/trpc";
 import { Breadcrumbs } from "react-daisyui";
 import Image from "next/image";
+import { prisma } from "../../server/db/client";
 
 const poemPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { slug } = props;
@@ -80,13 +81,13 @@ export const getStaticProps: GetStaticProps<{ slug: string }> = async (
     transformer: superjson, // optional - adds superjson serialization
   });
 
-  const post = await ssgHelper.poem.getBySlug.prefetch({ slug });
+  const post = await ssgHelper.poem.getBySlug.fetch({ slug });
 
-  // if (!post) {
-  //   return {
-  //     notFound: true,
-  //   };
-  // }
+  if (!post) {
+    return {
+      notFound: true,
+    };
+  }
   return {
     props: {
       trpcState: ssgHelper.dehydrate(),
@@ -97,7 +98,7 @@ export const getStaticProps: GetStaticProps<{ slug: string }> = async (
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const poems = await prisma?.poem.findMany();
+  const poems = await prisma.poem.findMany();
   if (!poems) return { paths: [{ params: {} }], fallback: false };
   const paths = poems.map((poem) => {
     return {
