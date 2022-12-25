@@ -11,11 +11,32 @@ import { trpc } from "../../utils/trpc";
 import { Breadcrumbs } from "react-daisyui";
 import Image from "next/image";
 import { prisma } from "../../server/db/client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
-const poemPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
+const PoemPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { slug } = props;
   const query = trpc.poem.getBySlug.useQuery({ slug });
   const poem = query.data;
+  const router = useRouter();
+  const nextMut = trpc.poem.getNext.useMutation();
+  const prevMut = trpc.poem.getPrev.useMutation();
+
+  const [next, setNext] = useState<string>(slug);
+  const [prev, setPrev] = useState<string>(slug);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (poem) {
+        const next = await nextMut.mutateAsync({ id: poem.id });
+        setNext(next?.slug ?? slug);
+
+        const prev = await prevMut.mutateAsync({ id: poem.id });
+        setPrev(prev?.slug ?? slug);
+      }
+    };
+    fetchData();
+  }, [poem]);
 
   return (
     <div className="bg-gray-800">
@@ -55,6 +76,25 @@ const poemPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                     );
                   })}
                 </div>
+              </div>
+              <div className="mt-16 flex">
+                <button
+                  className="mr-auto rounded-lg border border-gray-600/60 bg-pink-500 px-4 py-2 hover:bg-pink-400"
+                  onClick={() => {
+                    console.log(prev);
+                    router.push(`${prev}`);
+                  }}
+                >
+                  Prev
+                </button>
+                <button
+                  className="ml-auto rounded-lg border border-gray-600/60 bg-pink-500 px-4 py-2 hover:bg-pink-400"
+                  onClick={() => {
+                    router.push(`${next}`);
+                  }}
+                >
+                  Next
+                </button>
               </div>
             </div>
           ) : (
@@ -108,4 +148,4 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export default poemPage;
+export default PoemPage;

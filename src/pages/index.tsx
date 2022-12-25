@@ -1,4 +1,4 @@
-import type { GetStaticPaths, GetStaticPropsContext, NextPage } from "next";
+import type { NextPage } from "next";
 import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
@@ -8,7 +8,6 @@ import { useRouter } from "next/router";
 import { appRouter } from "../server/trpc/router/_app";
 import { createProxySSGHelpers } from "@trpc/react/ssg";
 import { createContextInner } from "../server/trpc/context";
-import { prisma } from "../server/db/client";
 import superjson from "superjson";
 
 const Home: NextPage = () => {
@@ -87,23 +86,6 @@ export async function getStaticProps() {
     revalidate: 1,
   };
 }
-
-// export const getStaticPaths: GetStaticPaths = async () => {
-//   const posts = await prisma.poem.findMany({
-//     select: {
-//       slug: true,
-//     },
-//   });
-//   return {
-//     paths: posts.map((post) => ({
-//       params: {
-//         slug: post.slug,
-//       },
-//     })),
-//     // https://nextjs.org/docs/basic-features/data-fetching#fallback-blocking
-//     fallback: "blocking",
-//   };
-// };
 
 const AuthShowcase: React.FC = () => {
   const { data: sessionData } = useSession();
