@@ -14,6 +14,7 @@ import { prisma } from "../../server/db/client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import Navbar from "../../components/navbar";
 
 const PoemPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { slug } = props;
@@ -46,6 +47,7 @@ const PoemPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
         <meta name="description" content="Hunter Reeve's Poetry" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Navbar />
       <main className="mx-auto min-h-screen p-4 text-gray-200">
         <div className="flex">
           <Breadcrumbs className="mx-auto">
