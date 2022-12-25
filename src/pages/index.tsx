@@ -1,10 +1,15 @@
-import type { NextPage } from "next";
+import type { GetStaticPaths, GetStaticPropsContext, NextPage } from "next";
 import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { appRouter } from "../server/trpc/router/_app";
+import { createProxySSGHelpers } from "@trpc/react/ssg";
+import { createContextInner } from "../server/trpc/context";
+import { prisma } from "../server/db/client";
+import superjson from "superjson";
 
 const Home: NextPage = () => {
   const poems = trpc.poem.getAll.useQuery();
@@ -66,6 +71,39 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export async function getStaticProps() {
+  const ssg = await createProxySSGHelpers({
+    router: appRouter,
+    ctx: await createContextInner({ session: null }),
+    transformer: superjson,
+  });
+  // prefetch `post.byId`
+  await ssg.poem.getAll.prefetch();
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+    },
+    revalidate: 1,
+  };
+}
+
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   const posts = await prisma.poem.findMany({
+//     select: {
+//       slug: true,
+//     },
+//   });
+//   return {
+//     paths: posts.map((post) => ({
+//       params: {
+//         slug: post.slug,
+//       },
+//     })),
+//     // https://nextjs.org/docs/basic-features/data-fetching#fallback-blocking
+//     fallback: "blocking",
+//   };
+// };
 
 const AuthShowcase: React.FC = () => {
   const { data: sessionData } = useSession();
