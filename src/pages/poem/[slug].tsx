@@ -87,7 +87,7 @@ const PoemPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
               </div>
               <div className="mt-16 flex">
                 <button
-                  className="mr-auto rounded-lg border border-gray-600/60 bg-pink-500 px-4 py-2 hover:bg-pink-400"
+                  className="mr-auto rounded-lg bg-pink-500 px-4 py-2 hover:bg-pink-400"
                   onClick={() => {
                     console.log(prev);
                     router.push(`${prev}`);
@@ -96,7 +96,7 @@ const PoemPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   Prev
                 </button>
                 <button
-                  className="ml-auto rounded-lg border border-gray-600/60 bg-pink-500 px-4 py-2 hover:bg-pink-400"
+                  className="ml-auto rounded-lg bg-pink-500 px-4 py-2 hover:bg-pink-400"
                   onClick={() => {
                     router.push(`${next}`);
                   }}
