@@ -23,11 +23,6 @@ const AuthShowcase: React.FC = () => {
 
   return (
     <div className="ml-auto flex items-center justify-center gap-2">
-      {sessionData && (
-        <p className="text-lg text-gray-700">
-          Logged in as {sessionData?.user?.name}
-        </p>
-      )}
       <button
         className="rounded-md bg-pink-600 px-4 py-1 text-xl text-white shadow-lg hover:bg-pink-800"
         onClick={sessionData ? () => signOut() : () => signIn()}
