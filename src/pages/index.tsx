@@ -47,8 +47,16 @@ const Home: NextPage = () => {
                         <hr className="my-2 h-px border-0 bg-gray-200/40" />
                       </>
                     )}
-                    <div className="leading-relaxed line-clamp-3">
+                    <div className="leading-relaxed">
                       {poem.content.split("\n").map((line, id) => {
+                        if (id > 2) return;
+                        if (id == 2 && poem.content.split("\n").length > 3) {
+                          return (
+                            <div key={`${id}-line`}>
+                              <p className="font-serif">{line}...</p>
+                            </div>
+                          );
+                        }
                         return (
                           <div key={`${id}-line`}>
                             <p className="font-serif">{line}</p>
