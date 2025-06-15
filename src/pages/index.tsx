@@ -113,7 +113,7 @@ const Home: NextPage = () => {
               {activeTab === "published"
                 ? userIsAdmin
                   ? "" // Do not display for regular page
-                  : "Hunter&apos;s Poems"
+                  : "Hunter's Poems"
                 : "Draft Poems"}
             </h2>
             {activeTab === "drafts" && (
