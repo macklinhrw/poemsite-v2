@@ -28,7 +28,7 @@ const Home: NextPage = () => {
   const currentPoems = activeTab === "published" ? publishedPoems : draftPoems;
 
   const handlePoemClick = (poem: any) => {
-    // If it's a draft and user is not admin, don't allow navigation
+    // If it is a draft and user is not admin, do not allow navigation
     if (poem.isDraft && !userIsAdmin) {
       return;
     }
@@ -112,13 +112,13 @@ const Home: NextPage = () => {
             <h2 className="text-center text-2xl font-bold sm:text-3xl">
               {activeTab === "published"
                 ? userIsAdmin
-                  ? "" // Don't display for regular page
-                  : "Hunter's Poems"
+                  ? "" // Do not display for regular page
+                  : "Hunter&apos;s Poems"
                 : "Draft Poems"}
             </h2>
             {activeTab === "drafts" && (
               <p className="mt-2 text-center text-sm text-gray-400 sm:text-base">
-                These are drafts that haven't been published yet
+                These are drafts that haven&apos;t been published yet
               </p>
             )}
           </div>

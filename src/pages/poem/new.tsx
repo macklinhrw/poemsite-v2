@@ -238,8 +238,8 @@ const NewPoem = () => {
                   placeholder="Paste picture web address here (optional)"
                   {...register("imageLink")}
                 />
-                <p className="mt-2 text-lg text-gray-300">
-                  You can skip this if you don't want to add a picture
+                <p className="text-lg text-gray-300">
+                  You can skip this if you don&apos;t want to add a picture
                 </p>
               </div>
 
@@ -256,20 +256,15 @@ const NewPoem = () => {
                   </span>
                 </label>
 
-                <label className="flex cursor-pointer items-center rounded-lg bg-gray-800 p-4 text-xl transition-colors hover:bg-gray-700">
+                <label className="flex cursor-pointer items-center">
                   <input
                     type="checkbox"
-                    className="mr-4 h-6 w-6 rounded text-blue-600 focus:ring-blue-500"
+                    className="mr-3 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     {...register("isDraft")}
                   />
-                  <div className="flex flex-col">
-                    <span className="text-lg font-medium">
-                      Save as draft (don't publish yet)
-                    </span>
-                    <span className="mt-1 text-sm text-gray-400">
-                      Drafts are only visible to administrators
-                    </span>
-                  </div>
+                  <span className="text-lg font-medium text-white">
+                    Save as draft (don&apos;t publish yet)
+                  </span>
                 </label>
               </div>
             </div>

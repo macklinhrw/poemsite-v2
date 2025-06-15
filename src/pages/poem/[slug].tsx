@@ -270,7 +270,7 @@ const PoemPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
               <div className="text-sm leading-relaxed text-gray-300">
                 <div className="mb-2">Delete this poem permanently?</div>
                 <div className="mb-2 break-all font-medium text-gray-100">
-                  "{poem?.title}"
+                  &quot;{poem?.title}&quot;
                 </div>
                 <div className="font-medium text-red-300">
                   Cannot be undone.
