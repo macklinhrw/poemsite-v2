@@ -6,6 +6,7 @@ import { useSession, signIn } from "next-auth/react";
 import Navbar from "../../components/navbar";
 import Tiptap from "../../components/TipTap/Editor";
 import { trpc } from "../../utils/trpc";
+import { isAdmin } from "../../utils/admin";
 
 interface PoemFormData {
   title: string;
@@ -26,6 +27,8 @@ const NewPoem = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
 
+  const userIsAdmin = isAdmin(session);
+
   const createPoemMutation = trpc.poem.create.useMutation({
     onSuccess: (data) => {
       // Redirect to the created poem
@@ -41,8 +44,8 @@ const NewPoem = () => {
   const submitForm = async (data: PoemFormData) => {
     setError(null); // Clear previous errors
 
-    if (!session) {
-      setError("You must be logged in to create a poem.");
+    if (!userIsAdmin) {
+      setError("You must be an administrator to create a poem.");
       return;
     }
 
@@ -59,9 +62,32 @@ const NewPoem = () => {
     setIsSubmitting(true);
 
     try {
+      // Convert HTML content back to plain text with newlines
+      // First, let's create a temporary div to parse the HTML properly
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = content;
+
+      // Get all paragraph elements and extract their text content
+      const paragraphs = tempDiv.querySelectorAll("p");
+      const lines = Array.from(paragraphs)
+        .map((p) => p.textContent || "")
+        .filter((line) => line.trim() !== "");
+
+      // Join with newlines, fallback to regex if no paragraphs found
+      const plainTextContent =
+        lines.length > 0
+          ? lines.join("\n")
+          : content
+              .replace(/<\/p><p>/g, "\n") // Replace </p><p> with newline
+              .replace(/<p>/g, "") // Remove opening <p> tags
+              .replace(/<\/p>/g, "") // Remove closing </p> tags
+              .replace(/<br\s*\/?>/gi, "\n") // Replace <br> tags with newlines
+              .replace(/<[^>]*>/g, "") // Remove any remaining HTML tags
+              .trim();
+
       await createPoemMutation.mutateAsync({
         title: data.title,
-        content: content,
+        content: plainTextContent,
         hasTitle: data.hasTitle ?? true,
         isDraft: data.isDraft ?? false,
         imageLink: data.imageLink || "",
@@ -74,24 +100,21 @@ const NewPoem = () => {
   // Show loading state while checking authentication
   if (status === "loading") {
     return (
-      <div>
+      <div className="min-h-screen bg-gray-800">
         <Head>
           <title>Hunter Reeve - Add Poem</title>
         </Head>
-        <main>
-          <Navbar />
-          <div className="mx-auto mt-12 max-w-4xl px-4 text-center text-white">
-            <h1 className="mb-8 text-4xl font-bold">Loading...</h1>
-            <p className="text-2xl text-gray-300">
-              Please wait while we prepare the page for you
-            </p>
-          </div>
-        </main>
+        <Navbar />
+        <div className="mx-auto mt-12 max-w-4xl px-4 text-center text-white">
+          <h1 className="mb-8 text-4xl font-bold">Loading...</h1>
+          <p className="text-2xl text-gray-300">
+            Please wait while we check your permissions
+          </p>
+        </div>
       </div>
     );
   }
 
-  // Redirect to sign in if not authenticated
   if (status === "unauthenticated") {
     return (
       <div>
@@ -110,6 +133,31 @@ const NewPoem = () => {
               className="rounded-lg bg-blue-600 px-12 py-6 text-2xl font-bold text-white shadow-lg transition-colors hover:bg-blue-700 hover:shadow-xl"
             >
               Sign In Now
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (!userIsAdmin) {
+    return (
+      <div>
+        <Head>
+          <title>Hunter Reeve - Add Poem</title>
+        </Head>
+        <main>
+          <Navbar />
+          <div className="mx-auto mt-12 max-w-4xl px-4 text-center text-white">
+            <h1 className="mb-8 text-5xl font-bold">Access Denied</h1>
+            <p className="mb-8 text-2xl text-gray-300">
+              You must be an administrator to add new poems
+            </p>
+            <button
+              onClick={() => router.push("/")}
+              className="rounded-lg bg-blue-600 px-12 py-6 text-2xl font-bold text-white shadow-lg transition-colors hover:bg-blue-700 hover:shadow-xl"
+            >
+              Go Back Home
             </button>
           </div>
         </main>
@@ -165,7 +213,7 @@ const NewPoem = () => {
                   Write Your Poem
                 </label>
                 <Tiptap
-                  className="w-full text-lg"
+                  className="w-full text-xl text-black"
                   commitState={setContent}
                   initialValue=""
                 />
@@ -196,27 +244,32 @@ const NewPoem = () => {
               </div>
 
               <div className="mb-8 space-y-4">
-                <label className="flex cursor-pointer items-center rounded-lg bg-gray-800 p-3 text-xl transition-colors hover:bg-gray-700">
+                <label className="flex cursor-pointer items-center rounded-lg bg-gray-800 p-4 text-xl transition-colors hover:bg-gray-700">
                   <input
                     type="checkbox"
-                    className="mr-4 h-5 w-5 rounded text-blue-600 focus:ring-blue-500"
+                    className="mr-4 h-6 w-6 rounded text-blue-600 focus:ring-blue-500"
                     defaultChecked={true}
                     {...register("hasTitle")}
                   />
-                  <span className="font-medium">
+                  <span className="text-lg font-medium">
                     Show the title on the poem page
                   </span>
                 </label>
 
-                <label className="flex cursor-pointer items-center rounded-lg bg-gray-800 p-3 text-xl transition-colors hover:bg-gray-700">
+                <label className="flex cursor-pointer items-center rounded-lg bg-gray-800 p-4 text-xl transition-colors hover:bg-gray-700">
                   <input
                     type="checkbox"
-                    className="mr-4 h-5 w-5 rounded text-blue-600 focus:ring-blue-500"
+                    className="mr-4 h-6 w-6 rounded text-blue-600 focus:ring-blue-500"
                     {...register("isDraft")}
                   />
-                  <span className="font-medium">
-                    Save as draft (don't publish yet)
-                  </span>
+                  <div className="flex flex-col">
+                    <span className="text-lg font-medium">
+                      Save as draft (don't publish yet)
+                    </span>
+                    <span className="mt-1 text-sm text-gray-400">
+                      Drafts are only visible to administrators
+                    </span>
+                  </div>
                 </label>
               </div>
             </div>
@@ -227,12 +280,12 @@ const NewPoem = () => {
                 disabled={isSubmitting}
                 className="flex-1 rounded-lg bg-green-600 px-8 py-6 text-2xl font-bold text-white shadow-lg transition-colors hover:bg-green-700 hover:shadow-xl disabled:cursor-not-allowed disabled:bg-gray-600"
               >
-                {isSubmitting ? "Saving Your Poem..." : "Save My Poem"}
+                {isSubmitting ? "Creating Poem..." : "Create Poem"}
               </button>
 
               <button
                 type="button"
-                onClick={() => router.back()}
+                onClick={() => router.push("/")}
                 className="flex-1 rounded-lg bg-gray-600 px-8 py-6 text-2xl font-bold text-white shadow-lg transition-colors hover:bg-gray-700 hover:shadow-xl"
               >
                 Cancel

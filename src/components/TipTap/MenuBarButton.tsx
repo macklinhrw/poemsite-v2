@@ -18,7 +18,7 @@ const MenuBarButton: React.FC<ButtonProps> = ({
   return (
     <button
       className={twMerge(
-        "rounded-lg border-2 p-4 shadow-md transition-all duration-200 hover:shadow-lg",
+        "rounded-lg border-2 p-2 shadow-md transition-all duration-200 hover:shadow-lg sm:p-4",
         "border-gray-400 bg-white text-gray-800 hover:border-blue-500 hover:bg-blue-50",
         "disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-200 disabled:text-gray-400 disabled:opacity-50",
         className,

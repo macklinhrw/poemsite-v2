@@ -22,7 +22,7 @@ interface MenuBarProps extends React.ComponentPropsWithoutRef<"div"> {
   editor: Editor | null;
 }
 
-const iconClassName = "h-8 w-8";
+const iconClassName = "h-6 w-6 sm:h-8 sm:w-8";
 
 const editorIcons = {
   bold: <TextBolder className={iconClassName} />,
@@ -58,8 +58,8 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor, className }) => {
       {/* Tool Bar */}
       <div className={className}>
         {/* Text Formatting */}
-        <div className="flex items-center gap-2">
-          <span className="mr-2 text-lg font-bold text-gray-800">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="mr-2 text-base font-bold text-gray-800 sm:text-lg">
             Text Style:
           </span>
           <Button
@@ -94,8 +94,8 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor, className }) => {
         </div>
 
         {/* Text Alignment */}
-        <div className="flex items-center gap-2">
-          <span className="mr-2 text-lg font-bold text-gray-800">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="mr-2 text-base font-bold text-gray-800 sm:text-lg">
             Alignment:
           </span>
           <Button
@@ -119,8 +119,10 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor, className }) => {
         </div>
 
         {/* Undo/Redo */}
-        <div className="flex items-center gap-2">
-          <span className="mr-2 text-lg font-bold text-gray-800">Undo:</span>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="mr-2 text-base font-bold text-gray-800 sm:text-lg">
+            Undo:
+          </span>
           <Button
             onClick={() => editor.chain().focus().undo().run()}
             disabled={!editor.can().chain().focus().undo().run()}
