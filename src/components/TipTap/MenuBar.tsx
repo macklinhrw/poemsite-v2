@@ -22,7 +22,7 @@ interface MenuBarProps extends React.ComponentPropsWithoutRef<"div"> {
   editor: Editor | null;
 }
 
-const iconClassName = "h-5 w-5";
+const iconClassName = "h-8 w-8";
 
 const editorIcons = {
   bold: <TextBolder className={iconClassName} />,
@@ -57,73 +57,83 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor, className }) => {
 
       {/* Tool Bar */}
       <div className={className}>
-        <Button
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          disabled={!editor.can().chain().focus().toggleBold().run()}
-          active={editor.isActive("bold")}
-          icon={editorIcons.bold}
-        />
-        <Button
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          disabled={!editor.can().chain().focus().toggleItalic().run()}
-          active={editor.isActive("italic")}
-          icon={editorIcons.italic}
-        />
-        <Button
-          onClick={() => editor.chain().focus().toggleUnderline().run()}
-          disabled={!editor.can().chain().focus().toggleUnderline().run()}
-          active={editor.isActive("underline")}
-          icon={editorIcons.underline}
-        />
-        <Button
-          onClick={() =>
-            editor.chain().focus().toggleHeading({ level: 1 }).run()
-          }
-          active={editor.isActive("heading", { level: 1 })}
-          icon={editorIcons.H1}
-        />
-        <Button
-          onClick={() => editor.chain().focus().setTextAlign("left").run()}
-          icon={editorIcons.alignLeft}
-          active={editor.isActive({ textAlign: "left" })}
-        />
-        <Button
-          onClick={() => editor.chain().focus().setTextAlign("center").run()}
-          icon={editorIcons.alignCenter}
-          active={editor.isActive({ textAlign: "center" })}
-        />
-        <Button
-          onClick={() => editor.chain().focus().setTextAlign("right").run()}
-          icon={editorIcons.alignRight}
-          active={editor.isActive({ textAlign: "right" })}
-        />
-        <Button
-          onClick={() => editor.chain().focus().setTextAlign("justify").run()}
-          icon={editorIcons.alignJustify}
-          active={editor.isActive({ textAlign: "justify" })}
-        />
-        <Button
-          onClick={() => {
-            editor.chain().focus().run();
-            setAddLinkOpen(true);
-          }}
-          icon={editorIcons.link}
-        />
-        <Button
-          onClick={() => editor.chain().focus().unsetLink().run()}
-          disabled={!editor.isActive("link")}
-          icon={editorIcons.linkBreak}
-        />
-        <Button
-          onClick={() => editor.chain().focus().undo().run()}
-          disabled={!editor.can().chain().focus().undo().run()}
-          icon={editorIcons.undo}
-        />
-        <Button
-          onClick={() => editor.chain().focus().redo().run()}
-          disabled={!editor.can().chain().focus().redo().run()}
-          icon={editorIcons.redo}
-        />
+        {/* Text Formatting */}
+        <div className="flex items-center gap-2">
+          <span className="mr-2 text-lg font-bold text-gray-800">
+            Text Style:
+          </span>
+          <Button
+            onClick={() => editor.chain().focus().toggleBold().run()}
+            disabled={!editor.can().chain().focus().toggleBold().run()}
+            active={editor.isActive("bold")}
+            icon={editorIcons.bold}
+            title="Make text bold"
+          />
+          <Button
+            onClick={() => editor.chain().focus().toggleItalic().run()}
+            disabled={!editor.can().chain().focus().toggleItalic().run()}
+            active={editor.isActive("italic")}
+            icon={editorIcons.italic}
+            title="Make text italic"
+          />
+          <Button
+            onClick={() => editor.chain().focus().toggleUnderline().run()}
+            disabled={!editor.can().chain().focus().toggleUnderline().run()}
+            active={editor.isActive("underline")}
+            icon={editorIcons.underline}
+            title="Underline text"
+          />
+          <Button
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 1 }).run()
+            }
+            active={editor.isActive("heading", { level: 1 })}
+            icon={editorIcons.H1}
+            title="Make text bigger (heading)"
+          />
+        </div>
+
+        {/* Text Alignment */}
+        <div className="flex items-center gap-2">
+          <span className="mr-2 text-lg font-bold text-gray-800">
+            Alignment:
+          </span>
+          <Button
+            onClick={() => editor.chain().focus().setTextAlign("left").run()}
+            icon={editorIcons.alignLeft}
+            active={editor.isActive({ textAlign: "left" })}
+            title="Align text to the left"
+          />
+          <Button
+            onClick={() => editor.chain().focus().setTextAlign("center").run()}
+            icon={editorIcons.alignCenter}
+            active={editor.isActive({ textAlign: "center" })}
+            title="Center text"
+          />
+          <Button
+            onClick={() => editor.chain().focus().setTextAlign("right").run()}
+            icon={editorIcons.alignRight}
+            active={editor.isActive({ textAlign: "right" })}
+            title="Align text to the right"
+          />
+        </div>
+
+        {/* Undo/Redo */}
+        <div className="flex items-center gap-2">
+          <span className="mr-2 text-lg font-bold text-gray-800">Undo:</span>
+          <Button
+            onClick={() => editor.chain().focus().undo().run()}
+            disabled={!editor.can().chain().focus().undo().run()}
+            icon={editorIcons.undo}
+            title="Undo last change"
+          />
+          <Button
+            onClick={() => editor.chain().focus().redo().run()}
+            disabled={!editor.can().chain().focus().redo().run()}
+            icon={editorIcons.redo}
+            title="Redo last change"
+          />
+        </div>
       </div>
     </>
   );

@@ -55,12 +55,14 @@ const Tiptap: React.FC<
     editable,
     extensions: [
       StarterKit.configure({
-        heading: { HTMLAttributes: { class: "text-xl" } },
-        paragraph: { HTMLAttributes: { class: "mb-2" } },
+        heading: { HTMLAttributes: { class: "text-3xl font-bold mb-4" } },
+        paragraph: {
+          HTMLAttributes: { class: "text-xl mb-4 leading-relaxed" },
+        },
       }),
       Link.configure({
         openOnClick: false,
-        HTMLAttributes: { class: "text-blue-400 hover:underline" },
+        HTMLAttributes: { class: "text-blue-400 hover:underline underline" },
       }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Underline,
@@ -68,7 +70,10 @@ const Tiptap: React.FC<
     content: `${initialValue ?? ""}`,
     editorProps: {
       attributes: {
-        class: clsx(editable && "h-[400px]", "outline-none"),
+        class: clsx(
+          editable && "min-h-[500px] text-xl leading-relaxed",
+          "outline-none p-4"
+        ),
       },
     },
     onUpdate: ({ editor }) => {
@@ -83,20 +88,26 @@ const Tiptap: React.FC<
         <MenuBar
           editor={editor}
           className={
-            "space-x-2 rounded-t border-x border-t border-white bg-gray-800 p-2"
+            "flex flex-wrap gap-2 rounded-t-lg border-x-2 border-t-2 border-gray-300 bg-gray-100 p-4"
           }
         />
       )}
       <EditorContent
         editor={editor}
         className={clsx(
-          editable ? "overflow-auto border border-white bg-gray-800 p-1" : ""
+          editable
+            ? "min-h-[500px] overflow-auto border-2 border-gray-300 bg-white p-4 text-xl leading-relaxed focus-within:border-blue-500"
+            : "text-xl leading-relaxed"
         )}
       />
-      {/*
-      <div className="mt-4 overflow-auto bg-primary p-2">
-        <pre>{JSON.stringify(editor?.getJSON(), null, '\t')}</pre>
-        </div> */}
+      {editable && (
+        <div className="rounded-b-lg border-x-2 border-b-2 border-gray-300 bg-gray-100 p-3">
+          <p className="text-lg font-medium text-gray-600">
+            💡 Tip: Use the buttons above to make text <strong>bold</strong>,{" "}
+            <em>italic</em>, or change alignment
+          </p>
+        </div>
+      )}
     </div>
   );
 };

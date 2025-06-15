@@ -9,7 +9,7 @@
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start",
-    "scripts:import": "ts-node-esm src/scripts/import"
+    "scripts:import": "tsx src/scripts/import"
   },
   "dependencies": {
     "@floating-ui/react-dom": "^1.0.1",
@@ -29,6 +29,7 @@
     "@trpc/server": "10.0.0-proxy-beta.17",
     "clsx": "^1.2.1",
     "daisyui": "^2.31.0",
+    "dotenv": "^16.5.0",
     "next": "12.3.1",
     "next-auth": "^4.12.3",
     "phosphor-react": "^1.4.1",
@@ -48,6 +49,7 @@
     "react-hook-form": "^7.41.1",
     "superjson": "1.9.1",
     "tailwind-merge": "^1.8.1",
+    "tsx": "^4.20.3",
     "zod": "^3.18.0"
   },
   "devDependencies": {
@@ -70,5 +72,12 @@
   },
   "ct3aMetadata": {
     "initVersion": "6.5.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "prisma"
+    ]
   }
 }
