@@ -218,7 +218,7 @@ const NewPoem = () => {
                   initialValue=""
                 />
                 {!content.trim() && (
-                  <p className="mt-3 text-lg font-medium text-gray-300">
+                  <p className="mt-3 w-full max-w-full overflow-hidden break-all text-sm font-medium text-gray-300 sm:text-lg">
                     Click in the box above to start writing your poem
                   </p>
                 )}
@@ -238,7 +238,7 @@ const NewPoem = () => {
                   placeholder="Paste picture web address here (optional)"
                   {...register("imageLink")}
                 />
-                <p className="text-lg text-gray-300">
+                <p className="break-words text-sm text-gray-300 sm:text-lg">
                   You can skip this if you don&apos;t want to add a picture
                 </p>
               </div>
@@ -256,13 +256,13 @@ const NewPoem = () => {
                   </span>
                 </label>
 
-                <label className="flex cursor-pointer items-center">
+                <label className="flex cursor-pointer items-center rounded-lg bg-gray-800 p-4 text-xl transition-colors hover:bg-gray-700">
                   <input
                     type="checkbox"
-                    className="mr-3 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="mr-4 h-6 w-6 rounded text-blue-600 focus:ring-blue-500"
                     {...register("isDraft")}
                   />
-                  <span className="text-lg font-medium text-white">
+                  <span className="text-lg font-medium">
                     Save as draft (don&apos;t publish yet)
                   </span>
                 </label>

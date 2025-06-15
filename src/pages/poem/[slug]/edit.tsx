@@ -320,13 +320,13 @@ const EditPoem = () => {
                 </span>
               </label>
 
-              <label className="flex cursor-pointer items-center">
+              <label className="flex cursor-pointer items-center rounded-lg bg-gray-800 p-4 text-xl transition-colors hover:bg-gray-700">
                 <input
                   type="checkbox"
-                  className="mr-3 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="mr-4 h-6 w-6 rounded text-blue-600 focus:ring-blue-500"
                   {...register("isDraft")}
                 />
-                <span className="text-lg font-medium text-white">
+                <span className="text-lg font-medium">
                   Save as draft (don&apos;t publish yet)
                 </span>
               </label>

@@ -100,14 +100,6 @@ const Tiptap: React.FC<
             : "text-xl leading-relaxed"
         )}
       />
-      {editable && (
-        <div className="rounded-b-lg border-x-2 border-b-2 border-gray-300 bg-gray-100 p-3">
-          <p className="text-lg font-medium text-gray-600">
-            💡 Tip: Use the buttons above to make text <strong>bold</strong>,{" "}
-            <em>italic</em>, or change alignment
-          </p>
-        </div>
-      )}
     </div>
   );
 };
